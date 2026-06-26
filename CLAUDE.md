@@ -434,3 +434,73 @@ Self-check after every task: *did I make decision, fix bug, learn something non-
 ---
 
 *AI persistent memory. Update when behaviors / skills / rules change.*
+
+---
+
+## Project Assessment (Phase 1)
+
+Assessment Date: 2026-06-23
+Target Repo: `upex-bunkai-tms` (https://github.com/upex-galaxy/upex-bunkai-tms.git)
+
+### Testing Maturity: 2/4
+- Current state: Moderate
+- Test files: 19 `.test.ts` files found in `lib/` (unit tests covering validation, builder-guards, optimistic-lock, sanitize, markdown, modules, projects, Jira ADF/AC extraction, import runner, RLS parity, RLS isolation)
+- Frameworks: Bun test runner (inferred — no Vitest/Jest config found; project uses `bun` runtime and `.test.ts` extension)
+- Coverage: Unknown — no coverage config or reports found
+- E2E tests: None — no Playwright or Cypress config found
+- Integration tests: `lib/api/rls-parity.test.ts`, `lib/tests/rls-isolation.test.ts` suggest RLS-level integration tests
+
+### Documentation State: Good
+- README: Yes (but is the agentic-dev-boilerplate README, not a product README)
+- API docs: Yes — Scalar viewer at `/api/docs`, OpenAPI spec at `/api/openapi`
+- Architecture: Yes — `.context/SRS/architecture-specs.md` referenced in migrations (not read); `supabase/migrations/README.md` present
+- Setup guide: Yes — `INSTALLER.md`
+
+### Code Quality
+- [x] ESLint: configured (`eslint.config.js` present, `@antfu/eslint-config` + `@next/eslint-plugin-next`)
+- [x] Prettier: configured (`.prettierignore` referenced in scripts; `prettier` in devDependencies)
+- [x] TypeScript: strict (TypeScript 5.9+, `tsc --noEmit` in `typecheck` script, `typedRoutes: true` in next.config.ts)
+- [x] Pre-commit hooks: configured (Husky 9.x + lint-staged; runs ESLint on `.ts/.tsx` and Prettier on other files)
+
+### CI/CD Maturity: None
+- No `.github/workflows/` directory found
+- Deployments managed via Vercel (production + staging preview envs)
+- No automated test run in CI pipeline
+
+### Identified Risks
+
+| Risk | Severity | Mitigation |
+|------|----------|------------|
+| No E2E or API integration tests from QA perspective | HIGH | This is the primary scope of the QA boilerplate — build E2E/API suite |
+| No CI pipeline for tests | HIGH | Tests only run locally; no gate before deploy |
+| Single Supabase project shared across local/staging/production | HIGH | Test data written in staging bleeds into production. Use workspace-scoped test data; clean up after each test session |
+| No test runner config file found (no bun test config) | MEDIUM | Infer from `package.json`; no test script defined in `scripts` section |
+| `lib/supabase-types.ts` not committed | MEDIUM | TypeScript types for Supabase tables not available without running `bun run types:gen` |
+| No auth test credentials documented | MEDIUM | Needed for E2E tests; refer to Jira Epic BK-29 per `dbhub.toml` comment |
+| No monitoring/alerting stack detected | LOW | No Sentry/DataDog; production errors may go undetected without external notification |
+
+### Phase Prioritization
+
+- Phase 1 (Constitution): Normal — completed
+- Phase 2 (Architecture): Normal — explore app routes, API contracts, auth flow, Jira import pipeline
+- Phase 3 (Infrastructure): Normal — document Supabase MCP, DBHub MCP, Vercel environments, `.env` keys
+- Phase 4 (Specification): Extended — rich domain with 24 DB migrations, RBAC, PAT system, Jira integration; spec will be detailed
+
+### Blockers
+- [ ] Auth test credentials for staging — needed before E2E test writing; ask project team or check Jira Epic BK-29
+- [ ] Confirm test runner: verify `bun test` works on target repo (no `test` script in `package.json` scripts section — may need adding)
+- [ ] `lib/supabase-types.ts` — run `bun run types:gen` in target repo before writing typed API test fixtures
+
+---
+
+## Phase 2 Progress — PRD + SRS
+
+Assessment Date: 2026-06-23
+
+- [x] `.context/PRD/executive-summary.md`
+- [x] `.context/PRD/user-personas.md`
+- [x] `.context/PRD/user-journeys.md`
+- [ ] `.context/business/business-feature-map.md` — produced by `/business-feature-map` command (post-discovery)
+- [x] `.context/SRS/architecture.md`
+- [x] `.context/SRS/functional-specs.md`
+- [x] `.context/SRS/non-functional-specs.md`

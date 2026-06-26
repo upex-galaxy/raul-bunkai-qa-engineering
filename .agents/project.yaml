@@ -5,31 +5,31 @@
 # Every unfilled field is `null` plus a TODO comment with a concrete example.
 
 project:
-  project_name: null # TODO: Project name (e.g. MyProject)
-  project_key: null # TODO: Project key in issue tracker (e.g. PROJ, ACME, UPEX). The boilerplate ships this `null` on purpose — the consumer project fills it; never hardcode a real key here.
-  webapp_domain: null # TODO: Domain of the web application under test (e.g. myproject.com)
+  project_name: Bunkai # Brand name for the product (upex-bunkai-tms)
+  project_key: BK # Jira project key — source: .agents/project.yaml of target repo
+  webapp_domain: bunkai.io # Primary production domain — source: target .agents/project.yaml line 13
 
 backend:
-  backend_repo: null # TODO: Relative path to backend repository (e.g. ../my-backend)
-  backend_stack: null # TODO: Backend technology stack (e.g. Node.js + Express)
-  backend_entry: null # TODO: Backend source entry point (e.g. src/)
+  backend_repo: ../upex-bunkai-tms # Monorepo — backend lives in app/api/ of Next.js project
+  backend_stack: Next.js 15 + Supabase # Source: target .agents/project.yaml line 16
+  backend_entry: app/api/ # Next.js API route handlers — source: target .agents/project.yaml line 17
 
 frontend:
-  frontend_repo: null # TODO: Relative path to frontend repository (e.g. ../my-frontend)
-  frontend_stack: null # TODO: Frontend technology stack (e.g. React + TypeScript)
-  frontend_entry: null # TODO: Frontend source entry point (e.g. src/)
+  frontend_repo: ../upex-bunkai-tms # Monorepo — same Next.js app
+  frontend_stack: Next.js 15 + React 19 + TypeScript # Source: target package.json
+  frontend_entry: app/ # Source: target .agents/project.yaml line 23
 
 database:
-  db_type: null # TODO: Database engine (e.g. PostgreSQL)
+  db_type: PostgreSQL (Supabase) # Source: target .agents/project.yaml line 26
 
 issue_tracker:
-  issue_tracker: null # TODO: Issue tracking tool (e.g. Jira)
-  issue_tracker_cli: null # TODO: CLI command to query tickets (e.g. acli (Jira) / gh issue (GitHub))
-  atlassian_url: null # TODO: Atlassian site base URL (e.g. https://company.atlassian.net) — same value as .env's ATLASSIAN_URL
+  issue_tracker: Jira # Source: target .agents/project.yaml line 29
+  issue_tracker_cli: acli # Source: target .agents/project.yaml line 30
+  atlassian_url: 'https://upexgalaxy69.atlassian.net' # Source: target .agents/project.yaml line 31
 
 testing:
-  default_env: null # TODO: Default testing environment — must match a key under `environments:` (e.g. staging)
-  tms_cli: null # TODO: Test management CLI command (e.g. bun xray)
+  default_env: staging # Use staging (not local) for QA — isolates from production
+  tms_cli: bun xray # Confirm Xray or Jira-native TMS usage for this project
 
 qa:
   formal_blocked_gate: true # When true and the substrate exposes a `blocked` story status, FAILED stories dispatch `defect_reported` (in_test -> blocked). When false (or no `blocked` slug), the skill leaves the story in `in_test` with the linked bug — non-strict fallback. See sprint-testing/references/sprint-orchestration.md Briefing 4 Step 5.
@@ -41,12 +41,12 @@ qa:
 # For explicit cross-env references use {{environments.<env>.<var>}} (e.g. {{environments.local.web_url}}).
 environments:
   local:
-    web_url: null # TODO: Frontend URL for local env (e.g. http://localhost:3000)
-    api_url: null # TODO: API base URL for local env (e.g. http://localhost:3000/api)
-    db_mcp: null # TODO: MCP server name for local DB (e.g. myproject-local-db)
-    api_mcp: null # TODO: MCP server name for local API (e.g. myproject-local-api)
+    web_url: 'http://localhost:3000' # Source: target .agents/project.yaml
+    api_url: 'http://localhost:3000/api' # Source: target .agents/project.yaml
+    db_mcp: dbhub # DBHub MCP server name for local — fill after .env DBHUB_* setup
+    api_mcp: openapi # No separate API MCP — API is same host as web
   staging:
-    web_url: null # TODO: Frontend URL for staging env (e.g. https://staging.myproject.com)
-    api_url: null # TODO: API base URL for staging env (e.g. https://api-staging.myproject.com)
-    db_mcp: null # TODO: MCP server name for staging DB (e.g. myproject-staging-db)
-    api_mcp: null # TODO: MCP server name for staging API (e.g. myproject-staging-api)
+    web_url: 'https://staging-upexbunkai.vercel.app' # Source: target .agents/project.yaml
+    api_url: 'https://staging-upexbunkai.vercel.app/api' # Source: target .agents/project.yaml
+    db_mcp: dbhub # DBHub MCP server name for staging — same Supabase project (fmbpikzpkafptqximhxn)
+    api_mcp: openapi # No separate API MCP — API is same host as staging web
